@@ -16,17 +16,17 @@ import axios from "axios";
 //   }
 // };
 
-export async function fetchDataUser() {
-  try {
-    const response = await axios.get(
-      "https://client-mainstream-hazards-parts.trycloudflare.com/user"
-    );
-    return response.data;
-  } catch (error) {
-    console.log(error);
-    return [];
-  }
-}
+// export async function fetchDataUser() {
+//   try {
+//     const response = await axios.get(
+//       "https://client-mainstream-hazards-parts.trycloudflare.com/user"
+//     );
+//     return response.data;
+//   } catch (error) {
+//     console.log(error);
+//     return [];
+//   }
+// }
 
 export async function addUserData(user: User) {
   const responseAdd = await axios.put(
@@ -51,9 +51,9 @@ export async function updateUser(user: User) {
   return response;
 }
 
-// export const fetchDataUser = () => {
-//   return users as User[];
-// };
+export const fetchDataUser = () => {
+  return users as User[];
+};
 
 export async function deleteUserService(id: string) {
   console.log(id);

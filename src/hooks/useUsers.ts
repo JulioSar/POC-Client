@@ -11,9 +11,11 @@ import { useEffect, useState } from "react";
 
 // Mapping the data from the API to the correct format
 async function useUsers() {
-  const users = await fetchDataUser(); // Add await once the API is ready
+  const users = fetchDataUser(); // Add await once the API is ready
 
-  const mappedUsers = users.data.map((user: User) => ({
+  // users.data.map
+
+  const mappedUsers = users.map((user: User) => ({
     id: user.id,
     name: user.name,
     mail: user.mail,
@@ -60,6 +62,7 @@ export function useAddUser() {
       const responseAdd = await addUserData(user);
       addUserResponse = responseAdd.data.status;
     } catch (error) {
+      console.log("adduser");
       console.log(error);
       return error;
     }

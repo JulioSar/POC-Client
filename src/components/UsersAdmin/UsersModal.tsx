@@ -1,3 +1,4 @@
+/* eslint-disable multiline-ternary */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/consistent-type-imports */
@@ -10,6 +11,7 @@ import { Switch } from "../ui/switch";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useAddUser, useUpdateUser } from "../../hooks/useUsers";
 import { useEffect, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 interface UsersModalProps {
   user: User;
@@ -25,7 +27,9 @@ export function UsersModal({ user, showModal }: UsersModalProps) {
   const [editName, setEditName] = useState(isNewUser);
   const { addUser, addUserResponse } = useAddUser();
   const { postUser, updateResponseStatus } = useUpdateUser();
+  const [refresh, setRefresh] = useState(false);
 
+  // Submit handler. It takes all the new data and set it to the state
   const onSubmit: SubmitHandler<User> = (data) => {
     setUserState((prevState) => ({
       ...prevState,
@@ -36,22 +40,24 @@ export function UsersModal({ user, showModal }: UsersModalProps) {
     setSubmitClicked(true);
   };
 
+  // Function to handle the call to custom hooks in order to save the data. Depends on bool to call add or update service
   const submitPostUser = async () => {
     let response: number | undefined = 0;
     isNewUser ? await addUser(userState) : await postUser(userState);
     isNewUser
       ? (response = addUserResponse)
       : (response = updateResponseStatus);
-    if (updateResponseStatus === 200) {
+    if (response === 200) {
       console.log("success");
     } else {
-      console.log(updateResponseStatus);
+      console.log(response);
     }
   };
-
+  // Calling the service handler function inside an useEffect that is accessible only if state submitClicked is true
   useEffect(() => {
     if (submitClicked) {
       submitPostUser();
+      setRefresh(!refresh);
     }
   }, [userState]);
 
@@ -61,15 +67,20 @@ export function UsersModal({ user, showModal }: UsersModalProps) {
         {/* Header */}
         <section className="grid gird-cols-6 gap-4 p-2">
           <div className="col-start-1 col-end-3 col-span-2 flex flex-row justify-start items-center gap-10">
-            <img
-              src={
-                userState.profile_picture
-                  ? userState.profile_picture
-                  : "https://picsum.photos/200/300"
-              }
-              alt="User profile picture"
-              className="w-24 h-24 rounded-full "
-            />
+            {isNewUser ? (
+              <input className="w-24 h-24 rounded-full bg-slate-500" />
+            ) : (
+              <Avatar className="w-24 h-24 text-3xl">
+                {/* .original is used to access the data value of the row */}
+                <AvatarImage src={userState.profile_picture} />
+                <AvatarFallback>
+                  {userState.name
+                    .split(" ")
+                    .slice(0, 2)
+                    .map((value) => value[0].toUpperCase())}
+                </AvatarFallback>
+              </Avatar>
+            )}
 
             <div className="flex flex-col gap-2">
               <h1 className="text-2xl">

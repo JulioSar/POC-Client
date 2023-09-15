@@ -50,15 +50,10 @@ export function UsersAdmin() {
         modalVisible && "bg-sky-500/[.06]"
       } flex flex-col items-center justify-center w-full h-full`}
     >
-      <section className="grid grid-cols-6 gap-4 w-11/12">
-        <div className="col-start-1 col-end-3">
-          <h2>Users</h2>
-          <p>{users?.length} results found</p>
-        </div>
-
+      <section className="grid grid-cols-6 gap-4 w-full pr-10">
         <button
           onClick={handleNewUserClick}
-          className="p-2 button-add col-start-7 col-span-2"
+          className="p-2 button-add col-start-7 col-span-2 text-white dark:shadow-none"
         >
           Add New User
         </button>
