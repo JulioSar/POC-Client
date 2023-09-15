@@ -31,7 +31,7 @@ import { Button } from "@/components/ui/button";
 
 import { Input } from "@/components/ui/input";
 import { DataTablePagination } from "@/components/Table/TablePagination";
-import { type SetStateAction, useState } from "react";
+import { useState } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: Array<ColumnDef<TData, TValue>>;
