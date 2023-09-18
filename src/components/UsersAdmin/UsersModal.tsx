@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { type User } from "../../types";
 import { UserContact } from "../UsersAdmin/UserContact";
 import "animate.css";
@@ -13,9 +13,16 @@ import "animate.css";
 interface UsersModalProps {
   user: User;
   showModal: () => void;
+  refresh: boolean;
+  setRefresh: Dispatch<SetStateAction<boolean>>;
 }
 
-export function UsersModal({ user, showModal }: UsersModalProps) {
+export function UsersModal({
+  user,
+  showModal,
+  refresh,
+  setRefresh,
+}: UsersModalProps) {
   const isNewUser = Boolean(!user.name);
   const [editName, setEditName] = useState(isNewUser);
   const [userState, setUserState] = useState<User>(user);
@@ -66,13 +73,11 @@ export function UsersModal({ user, showModal }: UsersModalProps) {
           </div>
         </section>
         <section className="">
-          <div className="grid grid-cols-3 gap-10 mb-8  ">
+          <div className="grid grid-cols-3 gap-10 mb-8 shadow-sm rounded-sm ">
             <button
               onClick={() => setTab("contact")}
               className={`${
-                tab === "contact"
-                  ? "bg-gray-300 rounded-t-lg animate__animated animate__fadeInUp"
-                  : "bg-none"
+                tab === "contact" ? "bg-gray-300 rounded-t-lg " : "bg-none"
               }`}
             >
               Profile
@@ -81,9 +86,7 @@ export function UsersModal({ user, showModal }: UsersModalProps) {
             <button
               onClick={() => setTab("organization")}
               className={`${
-                tab === "organization"
-                  ? "bg-gray-300 rounded-t-lg animate__animated animate__fadeInUp"
-                  : "bg-none"
+                tab === "organization" ? "bg-gray-300 rounded-t-lg " : "bg-none"
               }`}
             >
               Chart
@@ -91,9 +94,7 @@ export function UsersModal({ user, showModal }: UsersModalProps) {
             <button
               onClick={() => setTab("audit")}
               className={`${
-                tab === "audit"
-                  ? "bg-gray-300 rounded-t-lg animate__animated animate__fadeInUp"
-                  : "bg-none"
+                tab === "audit" ? "bg-gray-300 rounded-t-lg " : "bg-none"
               }`}
             >
               Audit
@@ -106,6 +107,8 @@ export function UsersModal({ user, showModal }: UsersModalProps) {
             userState={userState}
             editName={editName}
             setUserState={setUserState}
+            refresh={refresh}
+            setRefresh={setRefresh}
           />
         ) : tab === "organization" ? (
           <h1>Chart</h1>

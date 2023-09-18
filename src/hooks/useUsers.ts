@@ -11,11 +11,11 @@ import { useEffect, useState } from "react";
 
 // Mapping the data from the API to the correct format
 async function useUsers() {
-  const users = fetchDataUser(); // Add await once the API is ready
+  const users = await fetchDataUser(); // Add await once the API is ready
 
   // users.data.map
 
-  const mappedUsers = users.map((user: User) => ({
+  const mappedUsers = users.data.map((user: User) => ({
     id: user.id,
     name: user.name,
     mail: user.mail,
@@ -29,61 +29,54 @@ async function useUsers() {
 // Hook to get the users
 export function useGetUsers() {
   const [users, setUsers] = useState<User[]>([]);
-
+  const [refresh, setRefresh] = useState(false);
   useEffect(() => {
     const fetchUsers = async () => {
       const { usersMapped } = await useUsers();
       setUsers(usersMapped);
     };
     fetchUsers();
-  }, []);
+  }, [refresh]);
 
-  return { users };
+  return { users, refresh, setRefresh };
 }
 
 export function useUpdateUser() {
-  let updateResponseStatus: number = 0;
   const postUser = async (user: User) => {
     try {
       const response = await updateUser(user);
-      updateResponseStatus = response.status;
+
+      return response.data.code;
     } catch (error) {
       console.log(error);
     }
   };
 
-  return { postUser, updateResponseStatus };
+  return { postUser };
 }
 
 export function useAddUser() {
-  let addUserResponse: number = 0;
   const addUser = async (user: User) => {
     try {
       const responseAdd = await addUserData(user);
-      addUserResponse = responseAdd.data.status;
+      return responseAdd.data.code;
     } catch (error) {
-      console.log("adduser");
       console.log(error);
       return error;
     }
   };
-
-  return { addUser, addUserResponse };
+  return { addUser };
 }
 
 export function useDeleteUser() {
-  let deleteUserResponse: number = 0;
-
   const deleteUser = async (id: string) => {
     try {
       const response = await deleteUserService(id);
-      deleteUserResponse = response.data.status;
-      console.log(deleteUserResponse);
+      return response.status;
     } catch (error) {
       console.log(error);
       return error;
     }
   };
-
-  return { deleteUser, deleteUserResponse };
+  return { deleteUser };
 }

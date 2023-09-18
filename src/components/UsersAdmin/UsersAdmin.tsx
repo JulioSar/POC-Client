@@ -6,13 +6,13 @@ import { UsersModal } from "./UsersModal";
 import { useState } from "react";
 import { type User } from "@/types";
 import { v4 as uuidv4 } from "uuid";
+import { useToast } from "@/components/ui/use-toast";
 
 export function UsersAdmin() {
-  const { users } = useGetUsers();
-  const { deleteUser, deleteUserResponse } = useDeleteUser();
+  const { users, refresh, setRefresh } = useGetUsers();
   const [modalVisible, setModalVisible] = useState(false);
   const [userClicked, setUserClicked] = useState<User>();
-  const [refresh, setRefresh] = useState(false);
+  const { toast } = useToast();
 
   const showModal = () => {
     setModalVisible(!modalVisible);
@@ -37,10 +37,15 @@ export function UsersAdmin() {
   };
 
   const handleDeleteClick = async (id: string) => {
-    await deleteUser(id);
-    console.log(deleteUserResponse);
-    if (deleteUserResponse === 200) {
+    const { deleteUser } = useDeleteUser();
+
+    const deleteUserResponse = await deleteUser(id);
+    if (deleteUserResponse === 204) {
       setRefresh(!refresh);
+      toast({
+        title: "User deleted successfully",
+        description: "The user data has been deleted from data base correctly.",
+      });
     }
   };
 
@@ -65,7 +70,12 @@ export function UsersAdmin() {
       />
 
       {modalVisible && userClicked && (
-        <UsersModal user={userClicked} showModal={showModal} />
+        <UsersModal
+          user={userClicked}
+          showModal={showModal}
+          refresh={refresh}
+          setRefresh={setRefresh}
+        />
       )}
     </div>
   );

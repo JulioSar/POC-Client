@@ -10,24 +10,27 @@ import { useAddUser, useUpdateUser } from "../../hooks/useUsers";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { type User } from "../../types";
+import { useToast } from "@/components/ui/use-toast";
 
 interface UserContactProps {
   userState: User;
   editName: boolean;
   setUserState: Dispatch<SetStateAction<User>>;
+  refresh: boolean;
+  setRefresh: Dispatch<SetStateAction<boolean>>;
 }
 
 export function UserContact(
-  { userState, editName, setUserState }: UserContactProps,
+  { userState, editName, setUserState, refresh, setRefresh }: UserContactProps,
   isNewUser: boolean
 ) {
   const user = userState;
   const { register, handleSubmit } = useForm<User>();
   const [submitClicked, setSubmitClicked] = useState(false);
   const [switchChecked, setSwitchChecked] = useState(user.status);
-  const { addUser, addUserResponse } = useAddUser();
-  const { postUser, updateResponseStatus } = useUpdateUser();
-  const [refresh, setRefresh] = useState(false);
+  const { postUser } = useUpdateUser();
+  const { addUser } = useAddUser();
+  const { toast } = useToast();
 
   // Submit handler. It takes all the new data and set it to the state
   const onSubmit: SubmitHandler<User> = (data) => {
@@ -42,13 +45,15 @@ export function UserContact(
 
   // Function to handle the call to custom hooks in order to save the data. Depends on bool to call add or update service
   const submitPostUser = async () => {
-    let response: number | undefined = 0;
-    isNewUser ? await addUser(userState) : await postUser(userState);
-    isNewUser
-      ? (response = addUserResponse)
-      : (response = updateResponseStatus);
-    if (response === 200) {
-      console.log("success");
+    const response = isNewUser
+      ? await addUser(userState)
+      : await postUser(userState);
+    if (response === 201) {
+      setRefresh(!refresh);
+      toast({
+        title: "Data added correctly",
+        description: "The user data has been added to Data Base correctly.",
+      });
     } else {
       console.log(response);
     }
@@ -57,7 +62,6 @@ export function UserContact(
   useEffect(() => {
     if (submitClicked) {
       submitPostUser();
-      setRefresh(!refresh);
     }
   }, [userState]);
   return (

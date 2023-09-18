@@ -54,7 +54,7 @@ export function Header() {
               className="hidden col-span-2 col-end-5 justify-between items-center w-full lg:flex lg:w-auto lg:order-1 lg:flex-row-reverse"
               id="mobile-menu-2"
             >
-              <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+              <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0 items-center">
                 <li>
                   <a
                     href="#"
