@@ -28,8 +28,7 @@ export function UserContact(
   const { register, handleSubmit } = useForm<User>();
   const [submitClicked, setSubmitClicked] = useState(false);
   const [switchChecked, setSwitchChecked] = useState(user.status);
-  const { postUser } = useUpdateUser();
-  const { addUser } = useAddUser();
+
   const { toast } = useToast();
 
   // Submit handler. It takes all the new data and set it to the state
@@ -45,6 +44,8 @@ export function UserContact(
 
   // Function to handle the call to custom hooks in order to save the data. Depends on bool to call add or update service
   const submitPostUser = async () => {
+    const { postUser } = useUpdateUser();
+    const { addUser } = useAddUser();
     const response = isNewUser
       ? await addUser(userState)
       : await postUser(userState);

@@ -8,7 +8,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Dispatch, SetStateAction, useState } from "react";
 import { type User } from "../../types";
 import { UserContact } from "../UsersAdmin/UserContact";
-import "animate.css";
 
 interface UsersModalProps {
   user: User;

@@ -89,6 +89,7 @@ export const columns = ({
         onClick={() => {
           handleEditClick(row.original.id);
         }}
+        placeholder="edit"
       >
         <svg
           width="16"
@@ -129,6 +130,7 @@ export const columns = ({
         onClick={() => {
           handleDeleteClick(row.original.id);
         }}
+        placeholder="delete"
       >
         <svg
           width="16"

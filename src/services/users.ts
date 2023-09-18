@@ -48,8 +48,6 @@ export async function updateUser(user: User) {
 // };
 
 export async function deleteUserService(id: string) {
-  console.log(id);
   const response = await axios.delete(`http://localhost:3000/user/${id}`);
-  console.log(response);
   return response;
 }
