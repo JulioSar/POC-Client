@@ -108,9 +108,10 @@ export function UsersModal({
             setUserState={setUserState}
             refresh={refresh}
             setRefresh={setRefresh}
+            isNewUser={isNewUser}
           />
         ) : tab === "organization" ? (
-          <h1>Chart</h1>
+          <h1>Chart goes here</h1>
         ) : (
           tab === "audit" && <h1>This is audit</h1>
         )}

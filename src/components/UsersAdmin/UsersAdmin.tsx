@@ -7,6 +7,7 @@ import { useState } from "react";
 import { type User } from "@/types";
 import { v4 as uuidv4 } from "uuid";
 import { useToast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 export function UsersAdmin() {
   const { users, refresh, setRefresh } = useGetUsers();
@@ -77,6 +78,7 @@ export function UsersAdmin() {
           setRefresh={setRefresh}
         />
       )}
+      <Toaster />
     </div>
   );
 }

@@ -42,30 +42,31 @@ export function useGetUsers() {
 }
 
 export function useUpdateUser() {
-  const postUser = async (user: User) => {
+  const addData = async (user: User) => {
     try {
       const response = await updateUser(user);
-
+      console.log("update");
       return response.data.code;
     } catch (error) {
       console.log(error);
     }
   };
 
-  return { postUser };
+  return { addData };
 }
 
 export function useAddUser() {
-  const addUser = async (user: User) => {
+  const addData = async (user: User) => {
     try {
       const responseAdd = await addUserData(user);
+      console.log("ADD");
       return responseAdd.data.code;
     } catch (error) {
       console.log(error);
       return error;
     }
   };
-  return { addUser };
+  return { addData };
 }
 
 export function useDeleteUser() {

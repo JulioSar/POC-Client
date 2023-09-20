@@ -1,10 +1,6 @@
-import { UsersAdmin } from "./UsersAdmin";
+import { UsersAdmin } from "../UsersAdmin";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-// import { UsersModal } from "./UsersModal";
-// import { type SetStateAction } from "react";
-// import { type User } from "@/types";
-// import { v4 as uuidv4 } from "uuid";
 
 describe("UsersAdmin", () => {
   const ResizeObserverMock = vi.fn(() => ({
