@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/await-thenable */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
@@ -7,7 +8,7 @@ import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useAddUser, useUpdateUser } from "../../hooks/useUsers";
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { type User } from "../../types";
 import { useToast } from "@/components/ui/use-toast";
@@ -18,53 +19,55 @@ interface UserContactProps {
   setUserState: Dispatch<SetStateAction<User>>;
   refresh: boolean;
   setRefresh: Dispatch<SetStateAction<boolean>>;
+  isNewUser: boolean;
 }
 
-export function UserContact(
-  { userState, editName, setUserState, refresh, setRefresh }: UserContactProps,
-  isNewUser: boolean
-) {
+export function UserContact({
+  userState,
+  editName,
+  setUserState,
+  refresh,
+  setRefresh,
+  isNewUser,
+}: UserContactProps) {
   const user = userState;
   const { register, handleSubmit } = useForm<User>();
-  const [submitClicked, setSubmitClicked] = useState(false);
   const [switchChecked, setSwitchChecked] = useState(user.status);
-
+  const { addData } = isNewUser ? useAddUser() : useUpdateUser();
   const { toast } = useToast();
 
   // Submit handler. It takes all the new data and set it to the state
-  const onSubmit: SubmitHandler<User> = (data) => {
-    setUserState((prevState) => ({
-      ...prevState,
-      name: data.name ? data.name : prevState.name,
-      mail: data.mail,
+  const onSubmit: SubmitHandler<User> = async (data) => {
+    const userData = userState;
+    const newData = {
+      ...userData,
+      name: data.name ? data.name : userData.name,
+      mail: data.mail ? data.mail : userData.mail,
       status: switchChecked,
-    }));
-    setSubmitClicked(true);
-  };
+    };
+    setUserState(newData);
 
+    const response = await addData(newData);
+    submitToast(response);
+  };
   // Function to handle the call to custom hooks in order to save the data. Depends on bool to call add or update service
-  const submitPostUser = async () => {
-    const { postUser } = useUpdateUser();
-    const { addUser } = useAddUser();
-    const response = isNewUser
-      ? await addUser(userState)
-      : await postUser(userState);
-    if (response === 201) {
+  const submitToast = (response: number) => {
+    if (response === 200 || response === 201) {
       setRefresh(!refresh);
       toast({
         title: "Data added correctly",
         description: "The user data has been added to Data Base correctly.",
       });
     } else {
-      console.log(response);
+      toast({
+        title: "Unable to add user data",
+        description:
+          "There has been an error while saving new data. Please try again.",
+      });
     }
   };
   // Calling the service handler function inside an useEffect that is accessible only if state submitClicked is true
-  useEffect(() => {
-    if (submitClicked) {
-      submitPostUser();
-    }
-  }, [userState]);
+
   return (
     <>
       {/* Contact Information */}
