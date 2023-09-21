@@ -51,11 +51,7 @@ export function UsersAdmin() {
   };
 
   return (
-    <div
-      className={`${
-        modalVisible && "bg-sky-500/[.06]"
-      } flex flex-col items-center justify-center w-full h-full`}
-    >
+    <div className={`${modalVisible && "bg-sky-500/[.06]"} my-8`}>
       <section className="grid grid-cols-6 gap-4 w-full pr-10">
         <button
           onClick={handleNewUserClick}

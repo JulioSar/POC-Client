@@ -4,9 +4,9 @@ import { ModeToggle } from "../Toggles/ThemeToggler";
 export function Header() {
   return (
     <>
-      <header className="">
+      <header>
         <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
-          <div className="grid grid-cols-4 mx-auto max-w-screen-xl">
+          <div className="grid grid-cols-4 mx-auto mt-8">
             <a href="https://apexgroup.com" className="flex items-center">
               <img
                 src={ApexLogo}

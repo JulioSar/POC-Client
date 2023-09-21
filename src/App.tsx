@@ -11,7 +11,7 @@ function App() {
         <section className="row-span-3">
           <SideBar />
         </section>
-        <section className="col-span-2 shadow-lg max-h-28 flex flex-col justify-center">
+        <section className="col-span-2 shadow-xl max-h-28 flex flex-col justify-center">
           <Header />
         </section>
 

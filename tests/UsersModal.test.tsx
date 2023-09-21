@@ -134,7 +134,7 @@ describe("Rendering UserModel", () => {
     const userId = v4();
     server.use(
       rest.patch(
-        `http://localhost:3000/user/${userId}`,
+        `${import.meta.env.VITE_API_URL}/user/${userId}`,
         async (req, res, ctx) => {
           console.log("SErver handler called");
           return await res(ctx.status(200));
