@@ -9,9 +9,9 @@ import { Switch } from "../ui/switch";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useAddUser, useUpdateUser } from "../../hooks/useUsers";
 import { useState, type Dispatch, type SetStateAction } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { type User } from "../../types";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "../ui/use-toast";
 
 interface UserContactProps {
   userState: User;
@@ -52,6 +52,7 @@ export function UserContact({
   };
   // Function to handle the call to custom hooks in order to save the data. Depends on bool to call add or update service
   const submitToast = (response: number) => {
+    console.log(response);
     if (response === 200 || response === 201) {
       setRefresh(!refresh);
       toast({

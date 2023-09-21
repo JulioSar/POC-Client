@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import { type ColumnDef } from "@tanstack/react-table";
 import { type User } from "@/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -36,9 +37,11 @@ export const columns = ({
           <AvatarImage src={row.original.profile_picture} />
           <AvatarFallback>
             {row.original.name
-              .split(" ")
-              .slice(0, 2)
-              .map((value) => value[0].toUpperCase())}
+              ? row.original.name
+                  .split(" ")
+                  .slice(0, 2)
+                  .map((value) => value[0].toUpperCase())
+              : null}
           </AvatarFallback>
         </Avatar>
         {row.original.name}

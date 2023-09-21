@@ -18,7 +18,7 @@ import axios from "axios";
 
 export async function fetchDataUser() {
   try {
-    const response = await axios.get("http://localhost:3000/user");
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/user`);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -27,19 +27,25 @@ export async function fetchDataUser() {
 }
 
 export async function addUserData(user: User) {
-  const responseAdd = await axios.put(`http://localhost:3000/user/${user.id}`, {
-    name: user.name,
-    mail: user.mail,
-    status: user.status,
-  });
+  const responseAdd = await axios.put(
+    `${import.meta.env.VITE_API_URL}/user/${user.id}`,
+    {
+      name: user.name,
+      mail: user.mail,
+      status: user.status,
+    }
+  );
   return responseAdd;
 }
 
 export async function updateUser(user: User) {
-  const response = await axios.patch(`http://localhost:3000/user/${user.id}`, {
-    name: user.name,
-    mail: user.mail,
-  });
+  const response = await axios.patch(
+    `${import.meta.env.VITE_API_URL}/user/${user.id}`,
+    {
+      name: user.name,
+      mail: user.mail,
+    }
+  );
   return response;
 }
 
@@ -48,6 +54,8 @@ export async function updateUser(user: User) {
 // };
 
 export async function deleteUserService(id: string) {
-  const response = await axios.delete(`http://localhost:3000/user/${id}`);
+  const response = await axios.delete(
+    `${import.meta.env.VITE_API_URL}/user/${id}`
+  );
   return response;
 }
