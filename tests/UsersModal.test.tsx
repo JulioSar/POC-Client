@@ -1,26 +1,23 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
-import { setupServer } from "msw/node";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { UsersModal } from "../src/components/UsersAdmin/UsersModal";
-import { type User } from "../src/types";
 import { UsersAdmin } from "../src/components/UsersAdmin/UsersAdmin";
-import { rest } from "msw";
-import { v4 } from "uuid";
+import UserMother from "./backoffice/users/__mothers__/user.mother";
+import axios from "axios";
+import { updateUser } from "@/services/users";
 
 describe("Rendering UserModel", () => {
-  const server = setupServer();
-
-  beforeAll(() => {
-    server.listen();
-  });
-  afterEach(() => {
-    server.resetHandlers();
-  });
-  afterAll(() => {
-    server.close();
-  });
+  // beforeEach(() => {
+  //   axios.patch.mockReset();
+  // });
+  // afterEach(() => {
+  //   server.resetHandlers();
+  // });
+  // afterAll(() => {
+  //   server.close();
+  // });
 
   const ResizeObserverMock = vi.fn(() => ({
     observe: vi.fn(),
@@ -31,15 +28,9 @@ describe("Rendering UserModel", () => {
   vi.stubGlobal("ResizeObserver", ResizeObserverMock);
 
   test("should render modal", () => {
-    // GIVEN
-    const newUser: User = {
-      name: "",
-      mail: "",
-      status: false,
-      id: "123-456-789",
-      profile_picture: "",
-    };
-    // WHEN
+    //  given
+    const newUser = UserMother.random();
+    // when
     render(
       <UsersModal
         user={newUser}
@@ -51,19 +42,13 @@ describe("Rendering UserModel", () => {
     const inputEmail = screen.getByPlaceholderText(
       /email/i
     ) as HTMLInputElement;
-    // THEN
-    expect(inputEmail.value).toBe("");
+    // then
+    expect(inputEmail.value).toBe(newUser.mail);
   });
 
   test("should render user info", () => {
     // given
-    const userClicked: User = {
-      name: "Jhon Doe",
-      mail: "jhon.doe@mail.com",
-      status: true,
-      id: "123-456-789",
-      profile_picture: "",
-    };
+    const userClicked = UserMother.random();
 
     // when
     render(
@@ -78,18 +63,12 @@ describe("Rendering UserModel", () => {
       /email/i
     ) as HTMLInputElement;
     // then
-    expect(inputEmail.value).toBe("jhon.doe@mail.com");
+    expect(inputEmail.value).toBe(userClicked.mail);
   });
 
   test("should render modal's charts tab", async () => {
     // given
-    const userClicked: User = {
-      name: "Jhon Doe",
-      mail: "jhon.doe@mail.com",
-      status: true,
-      id: "123-456-789",
-      profile_picture: "",
-    };
+    const userClicked = UserMother.random();
     // when
     render(
       <UsersModal
@@ -107,13 +86,7 @@ describe("Rendering UserModel", () => {
 
   test("should render modal's audits tab", async () => {
     // given
-    const userClicked: User = {
-      name: "Jhon Doe",
-      mail: "jhon.doe@mail.com",
-      status: true,
-      id: "123-456-789",
-      profile_picture: "",
-    };
+    const userClicked = UserMother.random();
     // when
     render(
       <UsersModal
@@ -125,31 +98,19 @@ describe("Rendering UserModel", () => {
     );
     const chartBtn = screen.getByText(/Audit/i);
     await userEvent.click(chartBtn);
-    // THEN
+    // then
     expect(screen.getByText(/This is audit/i)).toBeDefined();
   });
 
-  test("submit user with success notification", async () => {
-    // GIVEN
-    const userId = v4();
-    server.use(
-      rest.patch(
-        `${import.meta.env.VITE_API_URL}/user/${userId}`,
-        async (req, res, ctx) => {
-          console.log("SErver handler called");
-          return await res(ctx.status(200));
-        }
-      )
-    );
-    console.log(userId);
-    const userClicked: User = {
-      name: "",
-      mail: "",
-      status: false,
-      id: userId,
-      profile_picture: "",
-    };
-    // WHEN
+  test("submit update user with success notification", async () => {
+    // given
+    const userClicked = UserMother.random();
+    axios.patch = vi.fn().mockResolvedValue({
+      data: userClicked,
+      status: 200,
+    });
+
+    // when
     render(
       <>
         <UsersAdmin />
@@ -161,19 +122,21 @@ describe("Rendering UserModel", () => {
         ></UsersModal>
       </>
     );
-    const inputEmail = screen.getByPlaceholderText("Email") as HTMLInputElement;
-    const inputName = screen.getByPlaceholderText("Name") as HTMLInputElement;
 
-    const submitBtn = screen.getByText(/submit/i);
-    await userEvent.clear(inputEmail);
-    await userEvent.clear(inputName);
-    await userEvent.type(inputName, "Jhon Doe");
-    await userEvent.type(inputEmail, "test@mail.com");
-    await userEvent.click(submitBtn);
-    // THEN
+    userClicked.mail = "test@mail.com";
+
+    const updatedUser = await updateUser(userClicked);
+
+    // then
     await waitFor(() => {
-      expect(inputEmail.value).toBe("test@mail.com");
-      expect(screen.getByText(/Data added/i)).toBeDefined();
+      expect(axios.patch).toHaveBeenCalledWith(
+        `${import.meta.env.VITE_API_URL}/user/${userClicked.id}`,
+        {
+          name: userClicked.name,
+          mail: userClicked.mail,
+        }
+      );
+      expect(updatedUser.data).toStrictEqual(userClicked);
     });
   });
 });

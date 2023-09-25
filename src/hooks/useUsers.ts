@@ -14,8 +14,7 @@ async function useUsers() {
   const users = await fetchDataUser(); // Add await once the API is ready
 
   // users.data.map
-
-  const mappedUsers = users.data.map((user: User) => ({
+  const mappedUsers = users?.data?.map((user: User) => ({
     id: user.id,
     name: user.name,
     mail: user.mail,

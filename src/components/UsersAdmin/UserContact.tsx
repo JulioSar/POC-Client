@@ -52,7 +52,6 @@ export function UserContact({
   };
   // Function to handle the call to custom hooks in order to save the data. Depends on bool to call add or update service
   const submitToast = (response: number) => {
-    console.log(response);
     if (response === 200 || response === 201) {
       setRefresh(!refresh);
       toast({
