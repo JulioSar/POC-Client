@@ -16,7 +16,6 @@ describe("Users table GET", () => {
       data: userClicked,
       status: 200,
     });
-    console.log(userClicked);
     // when
     render(
       <>

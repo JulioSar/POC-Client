@@ -1,8 +1,4 @@
-/* eslint-disable @typescript-eslint/await-thenable */
-/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-confusing-void-expression */
-/* eslint-disable multiline-ternary */
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
@@ -46,7 +42,6 @@ export function UserContact({
       status: switchChecked,
     };
     setUserState(newData);
-
     const response = await addData(newData);
     submitToast(response);
   };
@@ -146,7 +141,9 @@ export function UserContact({
                 }`}
                 id="user_status"
                 defaultChecked={switchChecked}
-                onCheckedChange={(checked) => setSwitchChecked(checked)}
+                onCheckedChange={(checked) => {
+                  setSwitchChecked(checked);
+                }}
               />
               <Label htmlFor="user_status">Active</Label>
             </div>
@@ -162,7 +159,7 @@ export function UserContact({
       <section className="mt-12">
         <h2 className="text-xl">Applications</h2>
         <div className="grid grid-cols-3 gap-6 p-2 mt-6">
-          <Card className="bg-gray-300 ">
+          <Card className="bg-gray-100 ">
             <CardHeader>
               <CardTitle>Agency Tools</CardTitle>
             </CardHeader>
@@ -170,7 +167,7 @@ export function UserContact({
               <p>An integrated loan agency and portfolio management platform</p>
             </CardContent>
           </Card>
-          <Card className="bg-gray-300 ">
+          <Card className="bg-gray-100 ">
             <CardHeader>
               <CardTitle>Participate</CardTitle>
             </CardHeader>
@@ -178,7 +175,7 @@ export function UserContact({
               <p>Dynamic GP and LP Document and Data Portals</p>
             </CardContent>
           </Card>
-          <Card className="bg-gray-300 ">
+          <Card className="bg-gray-100 ">
             <CardHeader>
               <CardTitle>Spotlight Tools</CardTitle>
             </CardHeader>

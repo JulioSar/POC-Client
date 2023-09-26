@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Dispatch, SetStateAction, useState } from "react";
 import { type User } from "../../types";
 import { UserContact } from "../UsersAdmin/UserContact";
+import UserAudit from "./UserAudit";
 
 interface UsersModalProps {
   user: User;
@@ -113,7 +114,7 @@ export function UsersModal({
         ) : tab === "organization" ? (
           <h1>Chart goes here</h1>
         ) : (
-          tab === "audit" && <h1>This is audit</h1>
+          tab === "audit" && <UserAudit userState={userState} />
         )}
       </div>
     </div>
