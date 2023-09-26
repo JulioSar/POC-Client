@@ -1,4 +1,4 @@
-import users from "../MOCK_DATA.json";
+import users from "../assets/MOCK_DATA.json";
 import axios from "axios";
 import { fetchDataUser } from "@/services/users";
 

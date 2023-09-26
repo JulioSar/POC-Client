@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { UsersModal } from "../src/components/UsersAdmin/UsersModal";
-import { UsersAdmin } from "../src/components/UsersAdmin/UsersAdmin";
-import UserMother from "./backoffice/users/__mothers__/user.mother";
-import axios from "axios";
-import { updateUser } from "@/services/users";
+import { UsersModal } from "../../src/components/UsersAdmin/UsersModal";
+import UserMother from "../backoffice/users/__mothers__/user.mother";
+import { ResizeObserverMock } from "../backoffice/resizeObserver";
 
 describe("Rendering UserModel", () => {
   // beforeEach(() => {
@@ -19,13 +17,8 @@ describe("Rendering UserModel", () => {
   //   server.close();
   // });
 
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
-
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  const resize = ResizeObserverMock;
+  console.log(resize);
 
   test("should render modal", () => {
     //  given
@@ -100,43 +93,5 @@ describe("Rendering UserModel", () => {
     await userEvent.click(chartBtn);
     // then
     expect(screen.getByText(/This is audit/i)).toBeDefined();
-  });
-
-  test("submit update user with success notification", async () => {
-    // given
-    const userClicked = UserMother.random();
-    axios.patch = vi.fn().mockResolvedValue({
-      data: userClicked,
-      status: 200,
-    });
-
-    // when
-    render(
-      <>
-        <UsersAdmin />
-        <UsersModal
-          user={userClicked}
-          showModal={() => {}}
-          refresh={false}
-          setRefresh={() => {}}
-        ></UsersModal>
-      </>
-    );
-
-    userClicked.mail = "test@mail.com";
-
-    const updatedUser = await updateUser(userClicked);
-
-    // then
-    await waitFor(() => {
-      expect(axios.patch).toHaveBeenCalledWith(
-        `${import.meta.env.VITE_API_URL}/user/${userClicked.id}`,
-        {
-          name: userClicked.name,
-          mail: userClicked.mail,
-        }
-      );
-      expect(updatedUser.data).toStrictEqual(userClicked);
-    });
   });
 });

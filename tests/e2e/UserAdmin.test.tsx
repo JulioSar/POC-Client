@@ -1,15 +1,12 @@
-import { UsersAdmin } from "../src/components/UsersAdmin/UsersAdmin";
+import { UsersAdmin } from "../../src/components/UsersAdmin/UsersAdmin";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { ResizeObserverMock } from "../backoffice/resizeObserver";
 
 describe("UsersAdmin", () => {
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
+  const resize = ResizeObserverMock;
+  console.log(resize);
 
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
   const user = userEvent.setup();
 
   beforeEach(() => {

@@ -1,5 +1,5 @@
-import { v4 } from "uuid";
 import type { User } from "../../../../src/types";
+import { faker, simpleFaker } from "@faker-js/faker";
 
 export default class UserMother {
   private id: string;
@@ -9,11 +9,11 @@ export default class UserMother {
   private profile_picture: string | undefined = undefined;
 
   constructor() {
-    this.id = v4();
-    this.name = "default-name";
-    this.mail = "default-mail";
+    this.id = simpleFaker.string.uuid();
+    this.name = faker.person.fullName();
+    this.mail = faker.internet.email();
     this.status = true;
-    this.profile_picture = "default-profile-picture";
+    this.profile_picture = faker.image.avatar();
   }
 
   withId(id: string): UserMother {
